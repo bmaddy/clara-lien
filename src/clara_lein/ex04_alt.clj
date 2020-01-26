@@ -1,10 +1,6 @@
 (ns clara-lein.ex04-alt
-  (:require [clara.rules :as c :refer [defrule defquery insert! retract!]]
-            [clara.rules.accumulators :as acc]
-            [clara.tools.fact-graph :refer [session->fact-graph]]
-            [clara.tools.inspect :refer [inspect]]))
+  (:require [clara.rules :as c :refer [defrule defquery insert!]]))
 
-(defrecord Datum [name attr value])
 (defrecord Value [attr value])
 (defrecord Guess [name attr value])
 (defrecord Person [name age birthday])
@@ -14,11 +10,7 @@
             (->Value :age 9)
             (->Value :birthday :january)
             (->Value :birthday :april)
-            (->Value :birthday :september)
-            ;; (->Value :name "Arnold")
-            ;; (->Value :name "Eric")
-            ;; (->Value :name "Peter")
-            ])
+            (->Value :birthday :september)])
 
 (defrule generate-combinations
   [?f <- Value (= attr ?a) (= value ?v)]
@@ -41,9 +33,6 @@
   [:test (= 3 (count (hash-set ?a-age ?e-age ?p-age)))]
   [:test (= 3 (count (hash-set ?a-birthday ?e-birthday ?p-birthday)))]
   =>
-  #_(println {:a [?a-age ?a-birthday]
-            :e [?e-age ?e-birthday]
-            :p [ ?p-age ?p-birthday]})
   (insert! (->Person "Arnold" ?a-age ?a-birthday)
            (->Person "Eric"   ?e-age ?e-birthday)
            (->Person "Peter"  ?p-age ?p-birthday)))
@@ -53,10 +42,19 @@
   [?f <- Person]
   )
 
-(comment
+(defn run
+  []
   (-> (c/mk-session)
       (c/insert-all facts)
       (c/fire-rules)
-      (c/query test-query))
+      (c/query test-query)))
+
+(comment
+  (run)
+
+  ;; result
+  ;; ({:?f {:name "Arnold", :age 9, :birthday :september}}
+  ;;  {:?f {:name "Eric", :age 7, :birthday :january}}
+  ;;  {:?f {:name "Peter", :age 8, :birthday :april}})
 
   )
