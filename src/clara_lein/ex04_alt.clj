@@ -26,11 +26,18 @@
   [Guess (= name "Arnold") (= attr :birthday) (= value ?a-birthday)]
   [Guess (= name "Eric")   (= attr :birthday) (= value ?e-birthday)]
   [Guess (= name "Peter")  (= attr :birthday) (= value ?p-birthday)]
-  [:test (= ?a-birthday :september)]
-  [:test (= ?e-age 7)]
-  [:test (= ?p-age 8)]
+
+  ;; Peter's birthday is in April.
   [:test (= ?p-birthday :april)]
+  ;; Eric is 7.
+  [:test (= ?e-age 7)]
+  ;; Arnold's birthday is in September.
+  [:test (= ?a-birthday :september)]
+  ;; Peter is 8.
+  [:test (= ?p-age 8)]
+  ;; Everyone has different ages
   [:test (= 3 (count (hash-set ?a-age ?e-age ?p-age)))]
+  ;; Everyone has different birthdays
   [:test (= 3 (count (hash-set ?a-birthday ?e-birthday ?p-birthday)))]
   =>
   (insert! (->Person "Arnold" ?a-age ?a-birthday)
@@ -39,8 +46,7 @@
 
 (defquery test-query
   []
-  [?f <- Person]
-  )
+  [?f <- Person])
 
 (defn run
   []
@@ -56,5 +62,4 @@
   ;; ({:?f {:name "Arnold", :age 9, :birthday :september}}
   ;;  {:?f {:name "Eric", :age 7, :birthday :january}}
   ;;  {:?f {:name "Peter", :age 8, :birthday :april}})
-
   )
