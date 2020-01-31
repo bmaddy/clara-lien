@@ -13,7 +13,7 @@
             (->Value :birthday :september)])
 
 (defrule generate-combinations
-  [?f <- Value (= attr ?a) (= value ?v)]
+  [Value (= attr ?a) (= value ?v)]
   =>
   (insert! (->Guess "Arnold" ?a ?v)
            (->Guess "Eric" ?a ?v)
