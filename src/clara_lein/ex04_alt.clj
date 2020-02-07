@@ -63,3 +63,23 @@
   ;;  {:?f {:name "Eric", :age 7, :birthday :january}}
   ;;  {:?f {:name "Peter", :age 8, :birthday :april}})
   )
+
+(defrecord P [])
+(defrecord Q [])
+
+(defrule modus-ponens
+  [P]
+  =>
+  (insert! (->Q)))
+
+(defquery all-q
+  []
+  [?q <- Q])
+
+(comment
+  (-> (c/mk-session)
+      (c/insert (->P))
+      (c/fire-rules)
+      (c/query all-q))
+
+  )
